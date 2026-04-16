@@ -1,23 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sélection Bus</title>
+    <title>CoachBus - Sélection</title>
     <style>
-        body { background: #333; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100dvh; margin: 0; }
-        .menu { background: white; padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; }
-        h2 { color: #7d3c8c; }
-        .btn { display: block; padding: 15px; margin: 10px 0; background: #f2f2f2; border: 2px solid #7d3c8c; color: #7d3c8c; text-decoration: none; font-weight: bold; border-radius: 5px; }
-        .btn:active { background: #7d3c8c; color: white; }
+        body { background: #2c3e50; font-family: "Segoe UI", Tahoma, sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; height: 100dvh; }
+        .menu-container { background: white; width: 90%; max-width: 450px; border: 1px solid #dee2e6; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .menu-header { background: #f8f9fa; padding: 20px; text-align: center; border-bottom: 2px solid #7d3c8c; color: #333; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .menu-body { padding: 15px; }
+        .bus-option { 
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px; margin-bottom: 10px; background: #fff; 
+            border: 1px solid #dee2e6; color: #333; text-decoration: none; 
+            font-weight: bold; transition: all 0.1s; border-left: 5px solid #7d3c8c;
+        }
+        .bus-option:hover { background: #f8f9fa; border-color: #7d3c8c; }
+        .bus-option:active { background: #e9ecef; }
+        .icon { font-size: 20px; }
     </style>
 </head>
 <body>
-    <div class="menu">
-        <h2>🚌 CHOIX DU BUS</h2>
-        <a href="/bus/bus1" class="btn">BUS LIGNE 1</a>
-        <a href="/bus/bus2" class="btn">BUS LIGNE 2</a>
-        <a href="/bus/minibus" class="btn">MINIBUS</a>
+    <div class="menu-container">
+        <div class="menu-header">Gestion des Transports</div>
+        <div class="menu-body">
+            <a href="/bus/bus1" class="bus-option"><span>LIGNE BUS 1</span> <span class="icon">➔</span></a>
+            <a href="/bus/bus2" class="bus-option"><span>LIGNE BUS 2</span> <span class="icon">➔</span></a>
+            <a href="/bus/minibus" class="bus-option"><span>MINIBUS</span> <span class="icon">➔</span></a>
+        </div>
     </div>
 </body>
 </html>
