@@ -8,30 +8,32 @@
 <body>
     <div class="app-wrapper">
         <header class="pronote-header">
-            <div class="header-left">{{ bus.upper() }} - {{ total }} élèves</div>
-            <div class="header-right">Présence <span class="globe">🌐</span></div>
+            <div class="header-left">{{ bus.upper() }}</div>
+            <div class="header-mid">ALLER</div>
+            <div class="header-right">RETOUR</div>
         </header>
 
         <main class="list-area">
             {% for eleve in eleves %}
-            <div class="row {{ 'is-present' if eleve.present == 1 else 'is-absent' }}" onclick="location.href='/toggle/{{ eleve.id }}/{{ bus }}'">
-                <div class="col-left">
-                    <span class="nom">{{ eleve.nom }}</span>&nbsp;{{ eleve.prenom }}
+            <div class="row">
+                <div class="col-name"><span class="nom">{{ eleve.nom }}</span> {{ eleve.prenom }}</div>
+                <div class="col-check {{ 'is-ok' if eleve.present_aller == 1 else 'is-off' }}" onclick="location.href='/toggle/{{ eleve.id }}/{{ bus }}/1'">
+                    {{ '✔' if eleve.present_aller == 1 else '' }}
                 </div>
-                <div class="col-right">
-                    {{ '✔' if eleve.present == 1 else '' }}
+                <div class="col-check {{ 'is-ok' if eleve.present_retour == 1 else 'is-off' }}" onclick="location.href='/toggle/{{ eleve.id }}/{{ bus }}/2'">
+                    {{ '✔' if eleve.present_retour == 1 else '' }}
                 </div>
             </div>
             {% endfor %}
         </main>
 
-        <footer class="pronote-footer" onclick="if(confirm('Envoyer l\'appel ?')) location.href='/terminer/{{ bus }}'">
-            <div class="btn-top">
-                <div class="check-box">✔</div> <span>Valider l'appel</span>
-            </div>
-            <div class="btn-bottom">
-                <span class="v-mark">✔</span> {{ presents }} présents / {{ total }}
-            </div>
+        <footer class="dual-footer">
+            <button class="f-btn aller" onclick="if(confirm('Envoyer rapport ALLER ?')) location.href='/terminer/{{ bus }}/aller'">
+                ALLER ({{ p_aller }})
+            </button>
+            <button class="f-btn retour" onclick="if(confirm('Valider RETOUR et RESET liste ?')) location.href='/terminer/{{ bus }}/retour'">
+                RETOUR ({{ p_retour }})
+            </button>
         </footer>
     </div>
 </body>

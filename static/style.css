@@ -27,7 +27,7 @@ html, body {
     border-right: 1px solid #000;
 }
 
-/* --- HEADER TYPE TABLEUR --- */
+/* --- HEADER TYPE TABLEUR (ADAPTÉ 3 COLONNES) --- */
 .pronote-header {
     display: flex; 
     height: 45px; 
@@ -37,23 +37,27 @@ html, body {
 }
 
 .header-left {
-    flex: 0 0 75%; 
+    flex: 0 0 50%; /* Largeur pour le nom du bus */
     line-height: 45px; 
     text-align: center; 
     color: #495057; 
     font-weight: 800; 
-    border-right: 2px solid #bbb; /* Trait vertical séparateur */
+    border-right: 2px solid #bbb; 
     font-size: 13px;
     letter-spacing: 0.5px;
 }
 
-.header-right {
-    flex: 0 0 25%; 
+.header-mid, .header-right {
+    flex: 0 0 25%; /* Largeur pour ALLER et RETOUR */
     line-height: 45px; 
     text-align: center; 
     color: #495057; 
     font-size: 11px; 
     font-weight: 800;
+}
+
+.header-mid {
+    border-right: 2px solid #bbb;
 }
 
 /* --- ZONE DE DÉFILEMENT --- */
@@ -69,118 +73,98 @@ html, body {
     display: flex; 
     min-height: 48px; 
     border-bottom: 1px solid #dee2e6;
-    cursor: pointer;
     align-items: stretch;
 }
 
-/* Effet zebra (une ligne sur deux) */
 .row:nth-child(even) {
     background-color: #fafafa;
 }
 
-/* --- COLONNES ALIGNÉES (75/25) --- */
-.col-left {
-    flex: 0 0 75%; 
+/* --- COLONNES ALIGNÉES (50 / 25 / 25) --- */
+.col-name {
+    flex: 0 0 50%; 
     display: flex; 
     align-items: center; 
-    padding: 0 15px;
-    border-right: 2px solid #bbb; /* Aligné sur le trait du header */
-    font-size: 14px;
-    transition: background 0.2s;
+    padding: 0 10px;
+    border-right: 2px solid #bbb; 
+    font-size: 13px;
+    background: #f2f2f2;
 }
 
-.col-right {
+.col-check {
     flex: 0 0 25%; 
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 20px;
     font-weight: bold;
+    cursor: pointer;
+    border-right: 1px solid #eee;
 }
 
 .nom { 
     font-weight: 800; 
     text-transform: uppercase; 
     color: #000;
+    margin-right: 5px;
 }
 
-/* --- ÉTATS DE PRÉSENCE (COULEURS PRO) --- */
+/* --- ÉTATS DE PRÉSENCE (TES COULEURS) --- */
 
-/* État : Absent (Par défaut) */
-.is-absent .col-left { 
+/* État : Absent / Non coché */
+.is-off { 
     color: #721c24; 
     background: #f8d7da; 
-    border-left: 6px solid #dc3545; /* Indicateur visuel rapide */
-}
-.is-absent .col-right { 
-    background: #f8d7da; 
-    color: #dc3545;
 }
 
-/* État : Présent (Coché) */
-.is-present .col-left { 
+/* État : Présent / Coché */
+.is-ok { 
     color: #155724; 
     background: #d4edda; 
-    border-left: 6px solid #28a745; /* Indicateur visuel rapide */
-}
-.is-present .col-right { 
-    background: #d4edda; 
-    color: #28a745;
 }
 
-/* --- FOOTER DE VALIDATION --- */
-.pronote-footer {
-    flex-shrink: 0; 
-    background: #343a40; /* Gris anthracite pro */
-    color: white;
-    padding: 15px;
-    cursor: pointer;
+/* --- FOOTER DOUBLE VALIDATION --- */
+.dual-footer {
+    display: flex;
+    height: 65px;
+    flex-shrink: 0;
+    background: #343a40;
+    padding: 8px;
+    gap: 8px;
     border-top: 2px solid #212529;
-    text-align: center;
 }
 
-.btn-top { 
-    display: flex; 
-    align-items: center; 
+.f-btn {
+    flex: 1;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    font-weight: bold; 
-    font-size: 15px;
-    margin-bottom: 6px;
-    letter-spacing: 1px;
+    align-items: center;
 }
 
-.check-box {
-    width: 20px; 
-    height: 20px; 
+.aller { 
+    background: #6c757d; 
+    border-bottom: 3px solid #495057; 
+}
+
+.retour { 
     background: #28a745; 
-    color: #fff;
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    margin-right: 12px; 
-    border-radius: 2px;
-    font-size: 12px;
+    border-bottom: 3px solid #1e7e34; 
 }
 
-.btn-bottom { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    font-size: 12px; 
-    color: #adb5bd; 
+.f-btn:active {
+    transform: translateY(2px);
+    border-bottom: none;
 }
 
-.v-mark { 
-    color: #28a745; 
-    font-weight: bold; 
-    border: 1px solid #28a745; 
-    padding: 0 4px; 
-    font-size: 10px; 
-    margin-right: 8px; 
-    border-radius: 2px;
-}
-
-/* --- EFFET AU CLIC --- */
-.row:active {
+/* --- EFFET AU CLIC SUR LES CASES --- */
+.col-check:active {
     filter: brightness(0.9);
 }
