@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Appel Bus</title>
+    <title>Appel CoachBus</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="app-wrapper">
         <header class="pronote-header">
-            <div class="count">{{ total }} élève(s)</div>
-            <div class="title">Absences <span class="globe">🌐</span></div>
+            <div class="count-box">{{ total }} élève(s)</div>
+            <div class="abs-title">Absences <span class="globe">🌐</span></div>
         </header>
 
         <main class="list-area">
             {% for eleve in eleves %}
             <div class="row {{ 'is-absent' if eleve.absences == 1 else '' }}" onclick="location.href='/toggle/{{ eleve.id }}'">
                 <div class="name-col">
-                    <strong>{{ eleve.nom }}</strong>&nbsp;{{ eleve.prenom }}
+                    <span class="nom-bold">{{ eleve.nom }}</span>&nbsp;{{ eleve.prenom }}
                 </div>
                 <div class="check-col">
                     {{ '1' if eleve.absences == 1 else '' }}
@@ -27,12 +27,14 @@
         </main>
 
         <footer class="pronote-footer" onclick="if(confirm('Confirmer l\'envoi de l\'appel ?')) location.href='/terminer_appel'">
-            <div class="btn-top">
-                <div class="box-check">✔</div>
-                <span>Appel terminé</span>
-            </div>
-            <div class="btn-bottom">
-                <span class="badge-v">✔</span> {{ presents }} élèves présents dans le bus
+            <div class="footer-btn-container">
+                <div class="btn-line-1">
+                    <div class="check-square">✔</div>
+                    <span>Appel terminé</span>
+                </div>
+                <div class="btn-line-2">
+                    <span class="v-badge">✔</span> {{ presents }} élèves présents dans le bus
+                </div>
             </div>
         </footer>
     </div>
