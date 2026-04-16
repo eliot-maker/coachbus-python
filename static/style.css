@@ -1,51 +1,59 @@
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* --- RESET & BASE --- */
+* { 
+    box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
+}
 
 html, body { 
-    margin: 0; padding: 0; 
-    height: 100dvh; /* FIX POUR MOBILE : Utilise toute la hauteur réelle */
+    margin: 0; 
+    padding: 0; 
+    height: 100dvh; 
     width: 100%;
     overflow: hidden; 
-    font-family: Arial, sans-serif;
-    background-color: #333;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background-color: #2c3e50; /* Fond sombre pro pour l'extérieur */
 }
 
 .app-wrapper {
     display: flex; 
     flex-direction: column;
-    height: 100dvh; /* S'adapte au téléphone */
-    max-width: 500px; 
+    height: 100dvh; 
+    max-width: 600px; /* Légèrement plus large pour l'aspect Excel */
     margin: 0 auto;
-    background: #fff;
-    position: relative;
+    background: #ffffff;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
-/* HEADER */
+/* --- HEADER TYPE "EXCEL" --- */
 .pronote-header {
     display: flex; 
-    height: 45px; 
-    border-bottom: 2px solid #bbb;
+    height: 40px; 
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
     flex-shrink: 0;
 }
 
-.count-box {
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #495057;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.header-left {
     flex: 0 0 75%; 
-    line-height: 45px; 
-    color: #7d3c8c; 
-    text-align: center; 
-    font-weight: bold; 
-    border-right: 1px solid #bbb;
+    border-right: 1px solid #dee2e6;
 }
 
-.abs-title {
-    flex: 0 0 25%; 
-    line-height: 45px; 
-    color: #7d3c8c; 
-    font-size: 11px; 
-    text-align: center;
-    font-weight: bold;
+.header-right {
+    flex: 0 0 25%;
 }
 
-/* LISTE SCROLLABLE */
+/* --- ZONE DE LISTE --- */
 .list-area {
     flex: 1; 
     overflow-y: auto;
@@ -53,60 +61,119 @@ html, body {
     -webkit-overflow-scrolling: touch;
 }
 
+/* --- LIGNES TYPE TABLEUR --- */
 .row {
     display: flex; 
-    min-height: 48px; 
-    border-bottom: 1px solid #ddd;
+    min-height: 42px; /* Hauteur plus compacte type Excel */
+    border-bottom: 1px solid #dee2e6;
     cursor: pointer;
-    align-items: stretch; /* Aligne les colonnes sur toute la hauteur */
+    transition: background 0.1s;
 }
 
-/* ALIGNEMENT LASER */
-.name-col {
-    flex: 0 0 80%; 
+/* Alternance de couleur de ligne (Zebra) */
+.row:nth-child(even) {
+    background-color: #fcfcfc;
+}
+
+.col-left {
+    flex: 0 0 75%; 
     display: flex; 
     align-items: center; 
-    padding: 10px 15px;
-    background: #f2f2f2; /* Le gris Pronote */
-    border-right: 1px solid #bbb;
+    padding: 0 12px;
+    border-right: 1px solid #dee2e6;
     font-size: 14px;
-    color: #000;
 }
 
-.nom-bold { font-weight: bold; text-transform: uppercase; }
-
-.check-col {
-    flex: 0 0 20%; 
+.col-right {
+    flex: 0 0 25%; 
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold; 
-    font-size: 20px;
+    font-size: 18px;
     background: #fff;
 }
 
-.is-absent .name-col { color: #d00; background: #fff0f0; }
-.is-absent .check-col { color: #d00; }
+.nom { 
+    font-weight: 800; 
+    margin-right: 5px;
+}
 
-/* FOOTER FIXE EN BAS */
+/* --- ÉTATS (COULEURS PRO) --- */
+
+/* Par défaut : Absent (Rouge léger/pro) */
+.is-absent .col-left { 
+    color: #721c24; 
+    background-color: #f8d7da; 
+    border-left: 4px solid #dc3545; /* Barre de statut à gauche */
+}
+.is-absent .col-right { 
+    color: #dc3545;
+    background-color: #f8d7da;
+}
+
+/* Si coché : Présent (Vert Excel) */
+.is-present .col-left { 
+    color: #155724; 
+    background-color: #d4edda; 
+    border-left: 4px solid #28a745;
+}
+.is-present .col-right { 
+    color: #28a745;
+    background-color: #d4edda;
+}
+
+/* --- FOOTER DE VALIDATION --- */
 .pronote-footer {
     flex-shrink: 0; 
-    background: #dcdcdc; 
-    border-top: 2px solid #888;
-    padding: 12px 15px;
+    background: #343a40; /* Footer sombre pour le contraste */
+    color: white;
+    padding: 15px;
     cursor: pointer;
-    z-index: 100;
+    border-top: 2px solid #212529;
 }
 
-.btn-line-1 { display: flex; align-items: center; font-weight: bold; margin-bottom: 5px; color: #333; }
-.check-square {
-    width: 20px; height: 20px; background: #7d3c8c; color: #fff;
-    font-size: 12px; display: flex; justify-content: center;
-    align-items: center; margin-right: 10px; border-radius: 2px;
+.btn-top { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-weight: bold; 
+    font-size: 16px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
 }
 
-.btn-line-2 { display: flex; align-items: center; font-size: 13px; color: #444; }
-.v-badge { 
-    color: green; font-weight: bold; border: 1px solid green; 
-    padding: 0 4px; font-size: 10px; margin-right: 8px; border-radius: 2px;
+.check-box {
+    width: 22px; 
+    height: 22px; 
+    background: #28a745; 
+    color: #fff;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin-right: 12px; 
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.btn-bottom { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 13px; 
+    color: #adb5bd; 
+}
+
+.v-mark { 
+    color: #28a745; 
+    font-weight: bold; 
+    border: 1px solid #28a745; 
+    padding: 0 5px; 
+    font-size: 10px; 
+    margin-right: 8px; 
+    border-radius: 2px;
+}
+
+/* --- EFFET AU CLIC --- */
+.row:active {
+    filter: brightness(0.9);
 }

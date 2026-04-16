@@ -8,29 +8,29 @@
 <body>
     <div class="app-wrapper">
         <header class="pronote-header">
-            <div class="header-left">{{ total }} élève(s)</div>
-            <div class="header-right">Absences <span class="globe">🌐</span></div>
+            <div class="header-left">{{ bus.upper() }} - {{ total }} élèves</div>
+            <div class="header-right">Présence <span class="globe">🌐</span></div>
         </header>
 
         <main class="list-area">
             {% for eleve in eleves %}
-            <div class="row {{ 'is-absent' if eleve.absences == 1 else '' }}" onclick="location.href='/toggle/{{ eleve.id }}'">
+            <div class="row {{ 'is-present' if eleve.present == 1 else 'is-absent' }}" onclick="location.href='/toggle/{{ eleve.id }}/{{ bus }}'">
                 <div class="col-left">
                     <span class="nom">{{ eleve.nom }}</span>&nbsp;{{ eleve.prenom }}
                 </div>
                 <div class="col-right">
-                    {{ '1' if eleve.absences == 1 else '' }}
+                    {{ '✔' if eleve.present == 1 else '' }}
                 </div>
             </div>
             {% endfor %}
         </main>
 
-        <footer class="pronote-footer" onclick="if(confirm('Confirmer l\'envoi ?')) location.href='/terminer_appel'">
+        <footer class="pronote-footer" onclick="if(confirm('Envoyer l\'appel ?')) location.href='/terminer/{{ bus }}'">
             <div class="btn-top">
-                <div class="check-box">✔</div> <span>Appel terminé</span>
+                <div class="check-box">✔</div> <span>Valider l'appel</span>
             </div>
             <div class="btn-bottom">
-                <span class="v-mark">✔</span> {{ presents }} élèves présents dans le bus
+                <span class="v-mark">✔</span> {{ presents }} présents / {{ total }}
             </div>
         </footer>
     </div>
