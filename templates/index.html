@@ -17,7 +17,7 @@
             {% for eleve in eleves %}
             <div class="pronote-row {{ 'is-absent' if eleve.absences == 1 else '' }}" onclick="location.href='/toggle/{{ eleve.id }}'">
                 <div class="student-name">
-                    <span class="nom-famille">{{ eleve.nom }}</span> {{ eleve.prenom }}
+                    <span class="nom-famille">{{ eleve.nom }}</span>&nbsp;{{ eleve.prenom }}
                 </div>
                 <div class="check-cell">
                     {{ '1' if eleve.absences == 1 else '' }}
@@ -26,13 +26,16 @@
             {% endfor %}
         </div>
 
-        <div class="pronote-footer">
-            <div class="footer-top" onclick="if(confirm('Envoyer le rapport par mail ?')) location.href='/terminer_appel'">
-                <input type="checkbox" checked disabled> <span>Appel terminé</span>
-            </div>
-            <div class="footer-bottom">
-                <span class="check-green">✔</span> 
-                <span class="counter-text">{{ presents }} élèves présents dans le bus</span>
+        <div class="pronote-footer" onclick="if(confirm('Confirmer l\'envoi du rapport ?')) location.href='/terminer_appel'">
+            <div class="footer-content">
+                <div class="footer-top">
+                    <div class="fake-checkbox">✔</div> 
+                    <span>Appel terminé</span>
+                </div>
+                <div class="footer-bottom">
+                    <span class="check-green">✔</span> 
+                    <span class="counter-text">{{ presents }} élèves présents dans le bus</span>
+                </div>
             </div>
         </div>
     </div>

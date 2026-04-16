@@ -1,8 +1,9 @@
-body, html {
+html, body {
     margin: 0; padding: 0;
+    height: 100%;
+    overflow: hidden; /* Empêche le scroll de toute la page */
     font-family: Arial, sans-serif;
     background-color: #333;
-    height: 100%;
 }
 
 .app-container {
@@ -12,17 +13,18 @@ body, html {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    border: 1px solid #000;
 }
 
 .pronote-header {
     display: flex;
-    border-bottom: 1px solid #bbbbbb;
+    border-bottom: 2px solid #bbbbbb;
+    height: 45px;
+    flex-shrink: 0;
 }
 
 .count-box {
     flex: 3;
-    padding: 10px;
+    line-height: 45px;
     color: #7d3c8c;
     text-align: center;
     font-weight: bold;
@@ -31,70 +33,78 @@ body, html {
 
 .abs-title {
     flex: 1;
-    padding: 10px;
+    line-height: 45px;
     color: #7d3c8c;
     font-size: 0.8em;
+    padding-right: 10px;
     text-align: right;
 }
 
 .list-container {
-    flex: 1;
-    overflow-y: auto;
-    background-color: #f0f0f0;
+    flex: 1; /* La liste prend la place centrale */
+    overflow-y: auto; /* Seule la liste scrolle */
+    -webkit-overflow-scrolling: touch;
 }
 
 .pronote-row {
     display: flex;
-    border-bottom: 1px solid #bbbbbb;
+    border-bottom: 1px solid #ddd;
+    height: 45px;
+    align-items: center;
     cursor: pointer;
 }
 
 .student-name {
-    flex: 3;
-    padding: 8px 15px;
+    flex: 4;
+    padding: 0 15px;
     background-color: #eeeeee;
+    height: 100%;
+    display: flex;
+    align-items: center;
     font-size: 14px;
     border-right: 1px solid #bbbbbb;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-.nom-famille { text-transform: uppercase; }
-
-.is-absent .student-name { color: red; }
+.nom-famille { text-transform: uppercase; font-weight: bold; }
 
 .check-cell {
     flex: 1;
-    background-color: #fff;
     text-align: center;
-    padding: 8px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
 }
+
+.is-absent .student-name { color: red; }
 
 .pronote-footer {
     background-color: #dcdcdc;
-    border-top: 2px solid #bbbbbb;
-    padding: 10px 15px;
+    border-top: 2px solid #999;
+    padding: 12px 15px;
+    flex-shrink: 0; /* Ne rétrécit jamais */
 }
 
 .footer-top {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-weight: bold;
+    font-size: 15px;
     margin-bottom: 5px;
-    color: #333;
 }
 
-.footer-bottom {
-    display: flex;
-    align-items: center;
-    font-size: 13px;
+.fake-checkbox {
+    width: 18px; height: 18px;
+    background-color: #7d3c8c;
+    color: white; font-size: 12px;
+    display: flex; justify-content: center; align-items: center;
+    margin-right: 10px; border-radius: 2px;
 }
+
+.footer-bottom { display: flex; align-items: center; font-size: 13px; }
 
 .check-green {
-    color: green;
-    font-weight: bold;
-    margin-right: 8px;
+    color: green; font-weight: bold;
     border: 1px solid green;
-    padding: 0 4px;
-    font-size: 10px;
+    padding: 0 4px; font-size: 10px; margin-right: 8px;
 }
