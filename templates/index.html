@@ -2,37 +2,39 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Appel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Appel Pro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="window">
-    <table class="appel-table">
-        <thead>
-            <tr>
-                <th class="header-name">{{ eleves|length }} élève(s)</th>
-                <th class="header-abs">Absences <span class="icon">🌐</span></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for eleve in eleves %}
-            <tr onclick="window.location.href='/toggle_absence/{{ eleve.id }}'" style="cursor:pointer;">
-                <td class="cell-name {{ 'is-absent' if eleve.absences > 0 else '' }}">
-                    {{ eleve.nom }}
-                </td>
-                <td class="cell-abs">
-                    {{ eleve.absences if eleve.absences > 0 else '' }}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
-    <div class="status-bar">
-        <label><input type="checkbox" checked> Appel terminé</label>
-        <div class="status-msg">
-            <span class="check-icon">✔️</span> {{ eleves|length }} élèves présents dans la salle
+<div class="app-container">
+    <div class="header">
+        <div class="header-left">{{ eleves|length }} élève(s)</div>
+        <div class="header-right">Absences <span class="globe">🌐</span></div>
+    </div>
+
+    <div class="list-container">
+        {% for eleve in eleves %}
+        <div class="row" onclick="location.href='/toggle/{{ eleve.id }}'">
+            <div class="name {{ 'is-absent' if eleve.absences == 1 else '' }}">
+                {{ eleve.nom }}
+            </div>
+            <div class="abs-box">
+                {{ 'X' if eleve.absences == 1 else '' }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="footer">
+        <label class="checkbox-container" onclick="if(confirm('Envoyer le PDF par mail ?')) location.href='/terminer_appel'">
+            <input type="checkbox" id="finish">
+            <span class="checkmark"></span>
+            Appel terminé
+        </label>
+        <div class="status-text">
+            ✅ {{ eleves|length }} élèves présents dans la salle
         </div>
     </div>
 </div>
