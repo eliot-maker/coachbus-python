@@ -1,4 +1,4 @@
-NOM;Prénom
+NOM;Prenom
 MARTIN;Lucas
 DURAND;Sophie
 PETIT;Thomas
