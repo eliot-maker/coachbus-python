@@ -3,41 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Appel Pro</title>
+    <title>Appel Bus</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="app-container">
+        <div class="pronote-header">
+            <div class="count-box">{{ total }} élève(s)</div>
+            <div class="abs-title">Absences <span class="icon">🌐</span></div>
+        </div>
 
-<div class="app-container">
-    <div class="header">
-        <div class="header-left">{{ eleves|length }} élève(s)</div>
-        <div class="header-right">Absences <span class="globe">🌐</span></div>
-    </div>
-
-    <div class="list-container">
-        {% for eleve in eleves %}
-        <div class="row" onclick="location.href='/toggle/{{ eleve.id }}'">
-            <div class="name {{ 'is-absent' if eleve.absences == 1 else '' }}">
-                {{ eleve.nom }}
+        <div class="list-container">
+            {% for eleve in eleves %}
+            <div class="pronote-row {{ 'is-absent' if eleve.absences == 1 else '' }}" onclick="location.href='/toggle/{{ eleve.id }}'">
+                <div class="student-name">
+                    <span class="nom-famille">{{ eleve.nom }}</span> {{ eleve.prenom }}
+                </div>
+                <div class="check-cell">
+                    {{ '1' if eleve.absences == 1 else '' }}
+                </div>
             </div>
-            <div class="abs-box">
-                {{ 'X' if eleve.absences == 1 else '' }}
+            {% endfor %}
+        </div>
+
+        <div class="pronote-footer">
+            <div class="footer-top" onclick="if(confirm('Envoyer le rapport par mail ?')) location.href='/terminer_appel'">
+                <input type="checkbox" checked disabled> <span>Appel terminé</span>
+            </div>
+            <div class="footer-bottom">
+                <span class="check-green">✔</span> 
+                <span class="counter-text">{{ presents }} élèves présents dans le bus</span>
             </div>
         </div>
-        {% endfor %}
     </div>
-
-    <div class="footer">
-        <label class="checkbox-container" onclick="if(confirm('Envoyer le PDF par mail ?')) location.href='/terminer_appel'">
-            <input type="checkbox" id="finish">
-            <span class="checkmark"></span>
-            Appel terminé
-        </label>
-        <div class="status-text">
-            ✅ {{ eleves|length }} élèves présents dans la salle
-        </div>
-    </div>
-</div>
-
 </body>
 </html>
