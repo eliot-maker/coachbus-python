@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 20px;
+}
+
+.container {
+    max-width: 600px;
+    background: white;
+    border: 1px solid #999;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #ffffff;
+    color: #8e44ad; /* Violet */
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+td {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 14px;
+}
+
+/* Colonne Absences */
+.col-absences {
+    width: 80px;
+    color: #8e44ad;
+}
+
+.cell-absent {
+    background-color: #ffffff;
+    text-align: center;
+}
+
+/* Style spécifique pour les alertes (ex: Firmin en rouge) */
+.text-red {
+    color: red;
+    font-weight: normal;
+}
+
+/* Barre de validation en bas */
+.footer {
+    background-color: #e0e0e0;
+    padding: 10px;
+    font-size: 13px;
+    border-top: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+}

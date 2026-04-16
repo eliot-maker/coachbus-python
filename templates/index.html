@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste d'appel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <table>
+        <thead>
+            <tr>
+                <th class="col-eleves">19 élève(s)</th>
+                <th class="col-absences">Absences</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for eleve in eleves %}
+            <tr>
+                <td class="{{ 'text-red' if eleve.alerte else '' }}">
+                    {{ eleve.nom }}
+                </td>
+                <td class="cell-absent">
+                    {{ eleve.absences }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="footer">
+        <input type="checkbox" checked disabled> Appel terminé
+        <span style="margin-left: 20px;">✅ 19 élèves présents dans la salle</span>
+    </div>
+</div>
+
+</body>
+</html>
