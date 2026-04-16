@@ -40,9 +40,6 @@ def toggle_absence(id):
 
 if __name__ == '__main__':
     init_db()
-    # Si on tape "python app.py add" dans le CMD
-    if len(sys.argv) > 1 and sys.argv[1] == 'add':
-        ajouter_eleve_cmd()
-    else:
-        port = int(os.environ.get("PORT", 5000))
-        app.run(host='0.0.0.0', port=port, debug=True)
+    # On récupère le port donné par Render, sinon 5000 par défaut
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
