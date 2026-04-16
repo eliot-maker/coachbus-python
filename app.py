@@ -5,9 +5,9 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g
 
 app = Flask(__name__)
-app.secret_key = 'change-moi-en-production-xyz123'
+app.secret_key = os.environ.get('SECRET_KEY', 'change-moi-en-production-xyz123')
 
-DATABASE = 'coachbus.db'
+DATABASE = os.environ.get('DATABASE_PATH', 'coachbus.db')
 
 # --------------------- Base de données ---------------------
 def get_db():
@@ -61,7 +61,6 @@ def init_db():
                 FOREIGN KEY (enfant_id) REFERENCES enfants(id)
             );
         ''')
-        # Données de test si tables vides
         cur = db.execute("SELECT COUNT(*) FROM coachs")
         if cur.fetchone()[0] == 0:
             db.executescript('''
@@ -122,7 +121,6 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-# --------------------- Dashboard (redirection selon rôle) ---------------------
 @app.route('/dashboard')
 @login_required()
 def dashboard():
@@ -145,7 +143,6 @@ def coach_appel(bus_num):
     coach_id = session['user_id']
     today = date.today().isoformat()
 
-    # Créer ou récupérer l'appel du jour pour ce bus et ce coach (non terminé)
     appel = db.execute(
         "SELECT * FROM appels WHERE date = ? AND bus_num = ? AND coach_id = ? AND termine = 0",
         (today, bus_num, coach_id)
@@ -161,18 +158,15 @@ def coach_appel(bus_num):
     else:
         appel_id = appel['id']
 
-    # Charger les enfants
     enfants = db.execute("SELECT * FROM enfants ORDER BY nom, prenom").fetchall()
 
     if request.method == 'POST':
-        # Validation de l'appel
         for enfant in enfants:
             statut = request.form.get(f'statut_{enfant["id"]}')
             commentaire = request.form.get(f'commentaire_{enfant["id"]}', '')
             if statut not in ('Présent', 'Absent'):
                 flash(f'Statut manquant pour {enfant["prenom"]} {enfant["nom"]}', 'error')
                 return redirect(url_for('coach_appel', bus_num=bus_num))
-            # Enregistrer dans lignes_appel
             db.execute(
                 "INSERT INTO lignes_appel (appel_id, enfant_id, statut, commentaire) VALUES (?, ?, ?, ?)",
                 (appel_id, enfant['id'], statut, commentaire)
@@ -185,7 +179,6 @@ def coach_appel(bus_num):
         flash('Appel validé avec succès !', 'success')
         return redirect(url_for('coach_select_bus'))
 
-    # Récupérer les statuts déjà saisis pour pré-remplissage
     lignes = db.execute(
         "SELECT enfant_id, statut, commentaire FROM lignes_appel WHERE appel_id = ?",
         (appel_id,)
@@ -270,6 +263,6 @@ if __name__ == '__main__':
     if not os.path.exists(DATABASE):
         init_db()
     else:
-        # S'assurer que les tables existent
         init_db()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
