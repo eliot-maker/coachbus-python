@@ -10,7 +10,7 @@ def init_db():
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute('''CREATE TABLE IF NOT EXISTS eleves 
                         (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                         nom TEXT NOT None, 
+                         nom TEXT NOT NULL, 
                          absences INTEGER DEFAULT 0)''')
 
 # --- FONCTION CMD POUR AJOUTER DES ELEVES ---
