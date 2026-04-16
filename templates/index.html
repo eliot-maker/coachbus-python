@@ -7,37 +7,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="app-container">
-        <div class="pronote-header">
-            <div class="count-box">{{ total }} élève(s)</div>
-            <div class="abs-title">Absences <span class="icon">🌐</span></div>
-        </div>
+    <div class="app-wrapper">
+        <header class="pronote-header">
+            <div class="count">{{ total }} élève(s)</div>
+            <div class="title">Absences <span class="globe">🌐</span></div>
+        </header>
 
-        <div class="list-container">
+        <main class="list-area">
             {% for eleve in eleves %}
-            <div class="pronote-row {{ 'is-absent' if eleve.absences == 1 else '' }}" onclick="location.href='/toggle/{{ eleve.id }}'">
-                <div class="student-name">
-                    <span class="nom-famille">{{ eleve.nom }}</span>&nbsp;{{ eleve.prenom }}
+            <div class="row {{ 'is-absent' if eleve.absences == 1 else '' }}" onclick="location.href='/toggle/{{ eleve.id }}'">
+                <div class="name-col">
+                    <strong>{{ eleve.nom }}</strong>&nbsp;{{ eleve.prenom }}
                 </div>
-                <div class="check-cell">
+                <div class="check-col">
                     {{ '1' if eleve.absences == 1 else '' }}
                 </div>
             </div>
             {% endfor %}
-        </div>
+        </main>
 
-        <div class="pronote-footer" onclick="if(confirm('Confirmer l\'envoi du rapport ?')) location.href='/terminer_appel'">
-            <div class="footer-content">
-                <div class="footer-top">
-                    <div class="fake-checkbox">✔</div> 
-                    <span>Appel terminé</span>
-                </div>
-                <div class="footer-bottom">
-                    <span class="check-green">✔</span> 
-                    <span class="counter-text">{{ presents }} élèves présents dans le bus</span>
-                </div>
+        <footer class="pronote-footer" onclick="if(confirm('Confirmer l\'envoi de l\'appel ?')) location.href='/terminer_appel'">
+            <div class="btn-top">
+                <div class="box-check">✔</div>
+                <span>Appel terminé</span>
             </div>
-        </div>
+            <div class="btn-bottom">
+                <span class="badge-v">✔</span> {{ presents }} élèves présents dans le bus
+            </div>
+        </footer>
     </div>
 </body>
 </html>

@@ -7,7 +7,7 @@ from flask_mail import Mail, Message
 from fpdf import FPDF
 
 app = Flask(__name__)
-app.secret_key = "coachbus_pro_final_2026"
+app.secret_key = "coachbus_final_v3"
 
 # --- CONFIGURATION MAIL ---
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -28,37 +28,17 @@ def init_db():
                          absences INTEGER DEFAULT 0)''')
 
 def importer_liste_txt():
-    filename = 'liste_eleves.txt'
-    if not os.path.exists(filename):
-        print(f"❌ Fichier {filename} manquant.")
+    if not os.path.exists('liste_eleves.txt'):
+        print("❌ Fichier liste_eleves.txt introuvable.")
         return
-    try:
-        with open(filename, 'r', encoding='utf-8') as f:
-            with sqlite3.connect(DB_PATH) as conn:
-                conn.execute("DELETE FROM eleves") # On vide avant d'importer
-                for ligne in f:
-                    if ';' in ligne:
-                        nom, prenom = ligne.strip().split(';')
-                        conn.execute("INSERT INTO eleves (nom, prenom) VALUES (?, ?)", (nom.upper(), prenom.capitalize()))
-                conn.commit()
-        print("✅ Liste remplacée avec succès !")
-    except Exception as e:
-        print(f"❌ Erreur : {e}")
-
-def vider_base_donnees():
-    confirm = input("⚠️ Supprimer TOUS les élèves ? (oui/non) : ")
-    if confirm.lower() == 'oui':
-        with sqlite3.connect(DB_PATH) as conn:
-            conn.execute("DELETE FROM eleves")
-            conn.execute("DELETE FROM sqlite_sequence WHERE name='eleves'")
-        print("✅ Base vidée.")
-
-def supprimer_un_eleve():
-    nom = input("Nom de famille à supprimer : ").upper()
     with sqlite3.connect(DB_PATH) as conn:
-        cursor = conn.execute("DELETE FROM eleves WHERE nom = ?", (nom,))
-        if cursor.rowcount > 0: print(f"✅ {nom} supprimé.")
-        else: print("❌ Non trouvé.")
+        conn.execute("DELETE FROM eleves")
+        with open('liste_eleves.txt', 'r', encoding='utf-8') as f:
+            for ligne in f:
+                if ';' in ligne:
+                    n, p = ligne.strip().split(';')
+                    conn.execute("INSERT INTO eleves (nom, prenom) VALUES (?, ?)", (n.upper(), p.capitalize()))
+    print("✅ Liste importée et remplacée.")
 
 @app.route('/')
 def index():
@@ -66,8 +46,7 @@ def index():
         conn.row_factory = sqlite3.Row
         eleves = conn.execute("SELECT * FROM eleves ORDER BY nom ASC").fetchall()
     total = len(eleves)
-    absents = sum(1 for e in eleves if e['absences'] == 1)
-    presents = total - absents
+    presents = total - sum(1 for e in eleves if e['absences'] == 1)
     return render_template('index.html', eleves=eleves, total=total, presents=presents)
 
 @app.route('/toggle/<int:id>')
@@ -83,34 +62,48 @@ def terminer_appel():
         eleves = conn.execute("SELECT * FROM eleves ORDER BY nom ASC").fetchall()
     
     date_str = datetime.now().strftime("%d-%m-%Y %H:%M")
-    filename = "appel_bus.pdf"
-    pdf = FPDF(); pdf.add_page(); pdf.set_font("Arial", 'B', 16)
-    pdf.cell(200, 10, f"Rapport d'appel Bus - {date_str}", ln=True, align='C')
-    pdf.ln(10); pdf.set_font("Arial", size=12)
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, f"Appel Bus - {date_str}", ln=True, align='C')
+    pdf.ln(10)
+    pdf.set_font("Arial", size=12)
     for e in eleves:
-        statut = "ABSENT (X)" if e['absences'] == 1 else "PRESENT"
         pdf.cell(100, 10, f"{e['nom']} {e['prenom']}", border=1)
-        pdf.cell(50, 10, statut, border=1, ln=True, align='C')
-    pdf.output(filename)
+        pdf.cell(50, 10, "ABSENT" if e['absences'] == 1 else "PRESENT", border=1, ln=True)
+    
+    pdf_file = "appel.pdf"
+    pdf.output(pdf_file)
 
     try:
-        msg = Message(f"Appel Bus - {date_str}", sender=app.config['MAIL_USERNAME'], recipients=['eliot.thomas.fondriest@gmail.com'])
-        msg.body = "Rapport d'appel ci-joint."
-        with app.open_resource(filename) as fp: msg.attach(filename, "application/pdf", fp.read())
-        mail.send(msg); os.remove(filename)
-        with sqlite3.connect(DB_PATH) as conn: conn.execute("UPDATE eleves SET absences = 0")
+        msg = Message(f"Appel Bus {date_str}", sender=app.config['MAIL_USERNAME'], recipients=['eliot.thomas.fondriest@gmail.com'])
+        msg.body = "Rapport en pièce jointe."
+        with app.open_resource(pdf_file) as fp:
+            msg.attach(pdf_file, "application/pdf", fp.read())
+        mail.send(msg)
+        os.remove(pdf_file) # Nettoyage du fichier temporaire
+        
+        with sqlite3.connect(DB_PATH) as conn:
+            conn.execute("UPDATE eleves SET absences = 0") # REMISE À ZÉRO ICI
         return render_template('success.html')
-    except Exception as e: return f"Erreur : {e}"
+    except Exception as e:
+        return f"Erreur : {e}"
 
 if __name__ == '__main__':
     init_db()
     if len(sys.argv) > 1:
         action = sys.argv[1]
         if action == 'import': importer_liste_txt()
-        elif action == 'clear': vider_base_donnees()
-        elif action == 'delete': supprimer_un_eleve()
-        elif action == 'add': 
-            nom = input("Nom : "); prenom = input("Prénom : ")
-            with sqlite3.connect(DB_PATH) as conn: conn.execute("INSERT INTO eleves (nom, prenom) VALUES (?, ?)", (nom.upper(), prenom.capitalize()))
+        elif action == 'clear':
+            with sqlite3.connect(DB_PATH) as conn: conn.execute("DELETE FROM eleves")
+            print("✅ Base vidée.")
+        elif action == 'add':
+            n = input("Nom: "); p = input("Prénom: ")
+            with sqlite3.connect(DB_PATH) as conn: conn.execute("INSERT INTO eleves (nom, prenom) VALUES (?,?)", (n.upper(), p.capitalize()))
+            print(f"✅ {n} ajouté.")
+        elif action == 'delete':
+            n = input("Nom exact à supprimer: ").upper()
+            with sqlite3.connect(DB_PATH) as conn: conn.execute("DELETE FROM eleves WHERE nom=?", (n,))
+            print(f"✅ {n} supprimé.")
     else:
         app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))

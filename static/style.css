@@ -1,110 +1,90 @@
-html, body {
-    margin: 0; padding: 0;
-    height: 100%;
-    overflow: hidden; /* Empêche le scroll de toute la page */
-    font-family: Arial, sans-serif;
-    background-color: #333;
+* { box-sizing: border-box; }
+html, body { 
+    margin: 0; padding: 0; height: 100%; 
+    overflow: hidden; /* Empêche tout le site de scroller */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
 }
 
-.app-container {
-    max-width: 500px;
-    margin: 0 auto;
-    background-color: #fff;
-    height: 100vh;
-    display: flex;
+.app-wrapper {
+    display: flex; 
     flex-direction: column;
+    height: 100vh; 
+    max-width: 500px; 
+    margin: 0 auto;
+    background: #fff;
 }
 
 .pronote-header {
-    display: flex;
-    border-bottom: 2px solid #bbbbbb;
-    height: 45px;
+    display: flex; 
+    height: 45px; 
+    border-bottom: 2px solid #bbb;
+    background: #fff; 
+    align-items: center; 
     flex-shrink: 0;
 }
 
-.count-box {
-    flex: 3;
-    line-height: 45px;
-    color: #7d3c8c;
-    text-align: center;
-    font-weight: bold;
-    border-right: 1px solid #bbbbbb;
-}
+.count { flex: 0 0 75%; text-align: center; color: #7d3c8c; font-weight: bold; border-right: 1px solid #bbb; line-height: 45px; }
+.title { flex: 1; text-align: center; color: #7d3c8c; font-size: 11px; font-weight: bold; }
 
-.abs-title {
-    flex: 1;
-    line-height: 45px;
-    color: #7d3c8c;
-    font-size: 0.8em;
-    padding-right: 10px;
-    text-align: right;
-}
-
-.list-container {
-    flex: 1; /* La liste prend la place centrale */
-    overflow-y: auto; /* Seule la liste scrolle */
+.list-area {
+    flex: 1; 
+    overflow-y: auto; /* SEULE la liste scrolle */
+    background: #fff;
     -webkit-overflow-scrolling: touch;
 }
 
-.pronote-row {
-    display: flex;
+.row {
+    display: flex; 
+    height: 48px; 
     border-bottom: 1px solid #ddd;
-    height: 45px;
-    align-items: center;
+    align-items: center; 
     cursor: pointer;
 }
 
-.student-name {
-    flex: 4;
-    padding: 0 15px;
-    background-color: #eeeeee;
-    height: 100%;
-    display: flex;
+/* ALIGNEMENT COLONNES STABLE */
+.name-col {
+    flex: 0 0 80%; /* Toujours 80% */
+    height: 100%; 
+    display: flex; 
     align-items: center;
+    padding: 0 15px; 
+    background: #f5f5f5;
+    border-right: 1px solid #bbb; 
     font-size: 14px;
-    border-right: 1px solid #bbbbbb;
     white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.nom-famille { text-transform: uppercase; font-weight: bold; }
-
-.check-cell {
-    flex: 1;
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
+.check-col {
+    flex: 0 0 20%; /* Toujours 20% */
+    text-align: center; 
+    font-weight: bold; 
+    font-size: 22px;
+    color: #333;
 }
 
-.is-absent .student-name { color: red; }
+.is-absent .name-col { color: #d00; background: #fff1f1; }
+.is-absent .check-col { color: #d00; }
 
+/* FOOTER COLLÉ EN BAS */
 .pronote-footer {
-    background-color: #dcdcdc;
+    flex-shrink: 0; 
+    background: #e0e0e0; 
     border-top: 2px solid #999;
-    padding: 12px 15px;
-    flex-shrink: 0; /* Ne rétrécit jamais */
+    padding: 12px 20px; 
+    cursor: pointer;
 }
 
-.footer-top {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-    font-size: 15px;
-    margin-bottom: 5px;
+.btn-top { display: flex; align-items: center; font-weight: bold; margin-bottom: 5px; color: #333; }
+.box-check {
+    width: 20px; height: 20px; background: #7d3c8c; color: #fff;
+    font-size: 12px; display: flex; justify-content: center;
+    align-items: center; margin-right: 10px; border-radius: 2px;
 }
 
-.fake-checkbox {
-    width: 18px; height: 18px;
-    background-color: #7d3c8c;
-    color: white; font-size: 12px;
-    display: flex; justify-content: center; align-items: center;
-    margin-right: 10px; border-radius: 2px;
-}
-
-.footer-bottom { display: flex; align-items: center; font-size: 13px; }
-
-.check-green {
-    color: green; font-weight: bold;
-    border: 1px solid green;
-    padding: 0 4px; font-size: 10px; margin-right: 8px;
+.btn-bottom { display: flex; align-items: center; font-size: 13px; color: #444; }
+.badge-v { 
+    color: green; font-weight: bold; border: 1px solid green; 
+    padding: 0 4px; font-size: 10px; margin-right: 8px; border-radius: 2px;
 }
