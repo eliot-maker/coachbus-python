@@ -2,37 +2,38 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste d'appel</title>
+    <title>Appel</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="container">
-    <table>
+<div class="window">
+    <table class="appel-table">
         <thead>
             <tr>
-                <th class="col-eleves">19 élève(s)</th>
-                <th class="col-absences">Absences</th>
+                <th class="header-name">{{ eleves|length }} élève(s)</th>
+                <th class="header-abs">Absences <span class="icon">🌐</span></th>
             </tr>
         </thead>
         <tbody>
             {% for eleve in eleves %}
-            <tr>
-                <td class="{{ 'text-red' if eleve.alerte else '' }}">
+            <tr onclick="window.location.href='/toggle_absence/{{ eleve.id }}'" style="cursor:pointer;">
+                <td class="cell-name {{ 'is-absent' if eleve.absences > 0 else '' }}">
                     {{ eleve.nom }}
                 </td>
-                <td class="cell-absent">
-                    {{ eleve.absences }}
+                <td class="cell-abs">
+                    {{ eleve.absences if eleve.absences > 0 else '' }}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     
-    <div class="footer">
-        <input type="checkbox" checked disabled> Appel terminé
-        <span style="margin-left: 20px;">✅ 19 élèves présents dans la salle</span>
+    <div class="status-bar">
+        <label><input type="checkbox" checked> Appel terminé</label>
+        <div class="status-msg">
+            <span class="check-icon">✔️</span> {{ eleves|length }} élèves présents dans la salle
+        </div>
     </div>
 </div>
 
