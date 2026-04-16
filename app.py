@@ -94,8 +94,26 @@ def ajouter_eleve_cmd():
 if __name__ == '__main__':
     init_db()
     import sys
-    if len(sys.argv) > 1 and sys.argv[1] == 'add':
-        ajouter_eleve_cmd()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'add':
+            ajouter_eleve_cmd()
+        elif sys.argv[1] == 'import':
+            importer_liste_txt()
     else:
         port = int(os.environ.get("PORT", 5000))
         app.run(host='0.0.0.0', port=port)
+        
+def importer_liste_txt():
+    filename = 'liste_eleves.txt'
+    if not os.path.exists(filename):
+        print(f"❌ Le fichier {filename} est introuvable.")
+        return
+
+    with open(filename, 'r', encoding='utf-8') as f:
+        with sqlite3.connect(DB_PATH) as conn:
+            for ligne in f:
+                if ';' in ligne:
+                    nom, prenom = ligne.strip().split(';')
+                    conn.execute("INSERT INTO eleves (nom, prenom) VALUES (?, ?)", (nom.upper(), prenom.capitalize()))
+            conn.commit()
+    print("✅ Tous les élèves ont été importés avec succès !")
