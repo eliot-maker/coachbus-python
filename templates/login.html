@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoachBus · Connexion</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 16px; }
+        .card { background: white; border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 380px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: #1e3a8a; font-weight: 600; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        input { width: 100%; padding: 18px; font-size: 18px; border: 2px solid #e2e8f0; border-radius: 18px; margin-bottom: 20px; box-sizing: border-box; }
+        button { width: 100%; padding: 18px; font-size: 18px; font-weight: 600; background: #2563eb; color: white; border: none; border-radius: 18px; cursor: pointer; }
+        .error { color: #dc2626; margin-top: 16px; text-align: center; }
+        .info { color: #6b7280; text-align: center; margin-top: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>🚌 CoachBus</h1>
+    <form method="POST">
+        <input type="text" name="identifiant" placeholder="Votre identifiant" autofocus required>
+        <button type="submit">Accéder</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, msg in messages %}
+            <div class="error">{{ msg }}</div>
+        {% endfor %}
+    {% endwith %}
+    <div class="info">superadmin, marie, julien, sophie</div>
+</div>
+</body>
+</html>

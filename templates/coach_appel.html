@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Appel Bus {{ bus_num }}</title>
+    <style>
+        body { font-family: system-ui; background: #f9fafb; margin: 0; padding-bottom: 90px; }
+        .header { background: white; padding: 16px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; }
+        .container { max-width: 500px; margin: 0 auto; padding: 16px; }
+        .enfant { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .nom { font-weight: 600; font-size: 18px; }
+        .age { color: #6b7280; font-size: 14px; margin-left: 8px; }
+        .allergies { color: #dc2626; font-size: 13px; margin-top: 4px; }
+        .precoche { background: #fef3c7; color: #92400e; font-size: 12px; padding: 4px 8px; border-radius: 20px; display: inline-block; margin-top: 6px; }
+        .actions { display: flex; gap: 8px; margin-top: 12px; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 40px; font-weight: 600; font-size: 16px; cursor: pointer; background: #f3f4f6; }
+        .btn.present { background: #10b981; color: white; }
+        .btn.absent { background: #ef4444; color: white; }
+        textarea { width: 100%; margin-top: 10px; padding: 10px; border: 1px solid #d1d5db; border-radius: 12px; box-sizing: border-box; }
+        .validate-btn { position: fixed; bottom: 0; left: 0; right: 0; max-width: 500px; margin: 0 auto; padding: 16px; background: white; border-top: 1px solid #e5e7eb; }
+        .validate-btn button { width: 100%; padding: 18px; background: #2563eb; color: white; border: none; border-radius: 40px; font-size: 18px; font-weight: bold; }
+        .summary { display: flex; gap: 10px; margin: 16px 0; }
+        .stat { flex: 1; text-align: center; padding: 12px; border-radius: 16px; font-weight: 600; }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h2 style="margin:0;">Appel Bus {{ bus_num }}</h2>
+    <a href="{{ url_for('logout') }}">Déco</a>
+</div>
+<div class="container">
+    {% set presents = statuts.values() | selectattr('statut', 'equalto', 'Présent') | list | length %}
+    {% set absents = statuts.values() | selectattr('statut', 'equalto', 'Absent') | list | length %}
+    <div class="summary">
+        <div class="stat" style="background:#d1fae5; color:#065f46;">{{ presents }} Présents</div>
+        <div class="stat" style="background:#fee2e2; color:#991b1b;">{{ absents }} Absents</div>
+        <div class="stat" style="background:#f3f4f6; color:#374151;">{{ enfants|length - presents - absents }} Restants</div>
+    </div>
+
+    <form method="POST">
+        {% for enfant in enfants %}
+        {% set s = statuts.get(enfant.id) %}
+        <div class="enfant">
+            <div class="nom">{{ enfant.prenom }} {{ enfant.nom }}<span class="age">{{ enfant.age }} ans</span></div>
+            {% if enfant.allergies %}<div class="allergies">⚠️ {{ enfant.allergies }}</div>{% endif %}
+            {% if absent_precoche[enfant.id] %}<span class="precoche">📢 Signalé absent</span>{% endif %}
+            <div class="actions">
+                <button type="button" class="btn present {% if s and s.statut == 'Présent' %}present{% endif %}" onclick="setStatut(this, 'Présent', {{ enfant.id }})">Présent</button>
+                <button type="button" class="btn absent {% if s and s.statut == 'Absent' %}absent{% endif %}" onclick="setStatut(this, 'Absent', {{ enfant.id }})">Absent</button>
+            </div>
+            <input type="hidden" name="statut_{{ enfant.id }}" id="statut_{{ enfant.id }}" value="{{ s.statut if s else '' }}">
+            <textarea name="commentaire_{{ enfant.id }}" placeholder="Commentaire (optionnel)">{{ s.commentaire if s else '' }}</textarea>
+        </div>
+        {% endfor %}
+        <div class="validate-btn">
+            <button type="submit" onclick="return verifierTous()">✅ Valider l'appel</button>
+        </div>
+    </form>
+</div>
+<script>
+    function setStatut(btn, statut, enfantId) {
+        const parent = btn.closest('.enfant');
+        parent.querySelectorAll('.actions .btn').forEach(b => b.classList.remove('present', 'absent'));
+        btn.classList.add(statut === 'Présent' ? 'present' : 'absent');
+        document.getElementById('statut_'+enfantId).value = statut;
+        // Mise à jour compteurs (recalcul simple)
+        let presents = 0, absents = 0;
+        document.querySelectorAll('[id^="statut_"]').forEach(input => {
+            if (input.value === 'Présent') presents++;
+            else if (input.value === 'Absent') absents++;
+        });
+        const total = {{ enfants|length }};
+        document.querySelectorAll('.stat')[0].innerHTML = presents + ' Présents';
+        document.querySelectorAll('.stat')[1].innerHTML = absents + ' Absents';
+        document.querySelectorAll('.stat')[2].innerHTML = (total - presents - absents) + ' Restants';
+    }
+    function verifierTous() {
+        let tousRemplis = true;
+        document.querySelectorAll('[id^="statut_"]').forEach(input => {
+            if (input.value !== 'Présent' && input.value !== 'Absent') {
+                tousRemplis = false;
+                input.closest('.enfant').style.border = '2px solid red';
+            }
+        });
+        if (!tousRemplis) {
+            alert('Veuillez sélectionner Présent ou Absent pour chaque enfant.');
+            return false;
+        }
+        return confirm('Valider définitivement cet appel ?');
+    }
+</script>
+</body>
+</html>
