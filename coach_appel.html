@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Appel Bus {{ bus_num }} · CoachBus</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            padding-bottom: 100px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1.5rem 1.2rem;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+        .title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #334155;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 14px 8px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            border: 1px solid #eef2f6;
+        }
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .enfant-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.2rem 1rem;
+            margin-bottom: 12px;
+            border: 1px solid #eef2f6;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .enfant-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .enfant-info {
+            flex: 1;
+        }
+        .enfant-nom {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .enfant-age {
+            font-size: 14px;
+            color: #64748b;
+            margin-left: 6px;
+            font-weight: 400;
+        }
+        .allergie {
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+        .precoche {
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-left: 8px;
+        }
+        .actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 12px;
+        }
+        .btn-statut {
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            background: #f1f5f9;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .btn-statut.present {
+            background: #10b981;
+            color: white;
+        }
+        .btn-statut.absent {
+            background: #ef4444;
+            color: white;
+        }
+        .comment-input {
+            width: 100%;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+        .validation-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px 20px;
+            background: white;
+            border-top: 1px solid #eef2f6;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.02);
+        }
+        .btn-valider {
+            width: 100%;
+            padding: 18px;
+            background: #1a2e4d;
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .flash-error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <span class="title">Appel · Bus {{ bus_num }}</span>
+        <a href="{{ url_for('logout') }}" style="color:#64748b; text-decoration:none;">Déco</a>
+    </div>
+    <span class="badge">{{ enfants|length }} enfants</span>
+
+    {% with messages = get_flashed_messages() %}
+        {% for msg in messages %}
+            <div class="flash-error">{{ msg }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    {% set presents = statuts.values() | selectattr('statut', 'equalto', 'Présent') | list | length %}
+    {% set absents = statuts.values() | selectattr('statut', 'equalto', 'Absent') | list | length %}
+    {% set restants = enfants|length - presents - absents %}
+
+    <div class="stats">
+        <div class="stat-card" style="background:#d1fae5;"><div class="stat-number" style="color:#065f46;">{{ presents }}</div><div class="stat-label">Présents</div></div>
+        <div class="stat-card" style="background:#fee2e2;"><div class="stat-number" style="color:#991b1b;">{{ absents }}</div><div class="stat-label">Absents</div></div>
+        <div class="stat-card" style="background:#f1f5f9;"><div class="stat-number" style="color:#334155;">{{ restants }}</div><div class="stat-label">À valider</div></div>
+    </div>
+
+    <form method="POST" id="appelForm">
+        {% for enfant in enfants %}
+        {% set s = statuts.get(enfant.id) %}
+        <div class="enfant-card" id="enfant-{{ enfant.id }}">
+            <div class="enfant-header">
+                <div class="enfant-info">
+                    <span class="enfant-nom">{{ enfant.prenom }} {{ enfant.nom }}<span class="enfant-age">{{ enfant.age }} ans</span></span>
+                    {% if enfant.allergies %}<span class="allergie">⚠️ {{ enfant.allergies }}</span>{% endif %}
+                    {% if absent_precoche[enfant.id] %}<span class="precoche">📢 Signalé absent</span>{% endif %}
+                </div>
+                <div class="actions">
+                    <button type="button" class="btn-statut present-btn {% if s and s.statut == 'Présent' %}present{% endif %}" data-id="{{ enfant.id }}" data-statut="Présent">Présent</button>
+                    <button type="button" class="btn-statut absent-btn {% if s and s.statut == 'Absent' %}absent{% endif %}" data-id="{{ enfant.id }}" data-statut="Absent">Absent</button>
+                </div>
+            </div>
+            <input type="hidden" name="statut_{{ enfant.id }}" id="statut_{{ enfant.id }}" value="{{ s.statut if s else '' }}">
+            <textarea name="commentaire_{{ enfant.id }}" class="comment-input" placeholder="Commentaire (optionnel)">{{ s.commentaire if s else '' }}</textarea>
+        </div>
+        {% endfor %}
+        <div class="validation-bar">
+            <button type="submit" class="btn-valider" onclick="return verifierTous()">✅ Valider l'appel</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function updateStats() {
+        let presents = 0, absents = 0;
+        document.querySelectorAll('[id^="statut_"]').forEach(inp => {
+            if (inp.value === 'Présent') presents++;
+            else if (inp.value === 'Absent') absents++;
+        });
+        const total = {{ enfants|length }};
+        document.querySelectorAll('.stat-number')[0].textContent = presents;
+        document.querySelectorAll('.stat-number')[1].textContent = absents;
+        document.querySelectorAll('.stat-number')[2].textContent = total - presents - absents;
+    }
+
+    document.querySelectorAll('.present-btn, .absent-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const enfantId = this.dataset.id;
+            const statut = this.dataset.statut;
+            const parent = this.closest('.enfant-card');
+            parent.querySelectorAll('.btn-statut').forEach(b => b.classList.remove('present', 'absent'));
+            this.classList.add(statut === 'Présent' ? 'present' : 'absent');
+            document.getElementById('statut_' + enfantId).value = statut;
+            updateStats();
+        });
+    });
+
+    function verifierTous() {
+        let tousRemplis = true;
+        document.querySelectorAll('[id^="statut_"]').forEach(input => {
+            if (input.value !== 'Présent' && input.value !== 'Absent') {
+                tousRemplis = false;
+                input.closest('.enfant-card').style.border = '2px solid #ef4444';
+            } else {
+                input.closest('.enfant-card').style.border = '1px solid #eef2f6';
+            }
+        });
+        if (!tousRemplis) {
+            alert('Veuillez sélectionner Présent ou Absent pour chaque enfant.');
+            return false;
+        }
+        return confirm('Valider définitivement cet appel ?');
+    }
+    updateStats();
+</script>
+</body>
+</html>
