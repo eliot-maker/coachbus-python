@@ -70,7 +70,7 @@ def terminer_appel():
     try:
         msg = Message(f"Appel Bus terminé - {date_str}",
                       sender=app.config['MAIL_USERNAME'],
-                      recipients=['TON_EMAIL_DESTINATAIRE@email.com'])
+                      recipients=['eliot.thomas.fondriest@email.com'])
         msg.body = f"L'appel du bus est terminé. Voici la liste en pièce jointe."
         with app.open_resource(filename) as fp:
             msg.attach(filename, "application/pdf", fp.read())
