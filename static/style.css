@@ -1,30 +1,25 @@
-/* RESET COMPLET */
-* { 
-    box-sizing: border-box; 
-    -webkit-tap-highlight-color: transparent; 
-}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body { 
-    margin: 0; 
-    padding: 0; 
-    height: 100dvh; 
+    margin: 0; padding: 0; 
+    height: 100dvh; /* FIX POUR MOBILE : Utilise toute la hauteur réelle */
     width: 100%;
     overflow: hidden; 
     font-family: Arial, sans-serif;
-    background-color: #333; /* Fond extérieur au wrapper */
+    background-color: #333;
 }
 
 .app-wrapper {
     display: flex; 
     flex-direction: column;
-    height: 100dvh; 
+    height: 100dvh; /* S'adapte au téléphone */
     max-width: 500px; 
     margin: 0 auto;
     background: #fff;
     position: relative;
 }
 
-/* HEADER - ALIGNEMENT FIXÉ À 75/25 */
+/* HEADER */
 .pronote-header {
     display: flex; 
     height: 45px; 
@@ -33,16 +28,16 @@ html, body {
 }
 
 .count-box {
-    flex: 0 0 75%; /* Largeur identique aux noms */
+    flex: 0 0 75%; 
     line-height: 45px; 
     color: #7d3c8c; 
     text-align: center; 
     font-weight: bold; 
-    border-right: 2px solid #bbb; /* Épaisseur harmonisée */
+    border-right: 1px solid #bbb;
 }
 
 .abs-title {
-    flex: 0 0 25%; /* Largeur identique aux chiffres */
+    flex: 0 0 25%; 
     line-height: 45px; 
     color: #7d3c8c; 
     font-size: 11px; 
@@ -63,28 +58,25 @@ html, body {
     min-height: 48px; 
     border-bottom: 1px solid #ddd;
     cursor: pointer;
-    align-items: stretch;
+    align-items: stretch; /* Aligne les colonnes sur toute la hauteur */
 }
 
-/* ALIGNEMENT LASER - PASSAGE À 75/25 */
+/* ALIGNEMENT LASER */
 .name-col {
-    flex: 0 0 75%; /* Aligné sur le header */
+    flex: 0 0 80%; 
     display: flex; 
     align-items: center; 
     padding: 10px 15px;
-    background: #f2f2f2; 
-    border-right: 2px solid #bbb; /* Épaisseur harmonisée */
+    background: #f2f2f2; /* Le gris Pronote */
+    border-right: 1px solid #bbb;
     font-size: 14px;
     color: #000;
 }
 
-.nom-bold { 
-    font-weight: bold; 
-    text-transform: uppercase; 
-}
+.nom-bold { font-weight: bold; text-transform: uppercase; }
 
 .check-col {
-    flex: 0 0 25%; /* Aligné sur le header */
+    flex: 0 0 20%; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,14 +85,8 @@ html, body {
     background: #fff;
 }
 
-/* ÉTATS ABSENTS */
-.is-absent .name-col { 
-    color: #d00; 
-    background: #fff0f0; 
-}
-.is-absent .check-col { 
-    color: #d00; 
-}
+.is-absent .name-col { color: #d00; background: #fff0f0; }
+.is-absent .check-col { color: #d00; }
 
 /* FOOTER FIXE EN BAS */
 .pronote-footer {
@@ -112,40 +98,15 @@ html, body {
     z-index: 100;
 }
 
-.btn-line-1 { 
-    display: flex; 
-    align-items: center; 
-    font-weight: bold; 
-    margin-bottom: 5px; 
-    color: #333; 
-}
-
+.btn-line-1 { display: flex; align-items: center; font-weight: bold; margin-bottom: 5px; color: #333; }
 .check-square {
-    width: 20px; 
-    height: 20px; 
-    background: #7d3c8c; 
-    color: #fff;
-    font-size: 12px; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    margin-right: 10px; 
-    border-radius: 2px;
+    width: 20px; height: 20px; background: #7d3c8c; color: #fff;
+    font-size: 12px; display: flex; justify-content: center;
+    align-items: center; margin-right: 10px; border-radius: 2px;
 }
 
-.btn-line-2 { 
-    display: flex; 
-    align-items: center; 
-    font-size: 13px; 
-    color: #444; 
-}
-
+.btn-line-2 { display: flex; align-items: center; font-size: 13px; color: #444; }
 .v-badge { 
-    color: green; 
-    font-weight: bold; 
-    border: 1px solid green; 
-    padding: 0 4px; 
-    font-size: 10px; 
-    margin-right: 8px; 
-    border-radius: 2px;
+    color: green; font-weight: bold; border: 1px solid green; 
+    padding: 0 4px; font-size: 10px; margin-right: 8px; border-radius: 2px;
 }
